@@ -1,24 +1,19 @@
-name: Merge to Live
-on:
-  push:
-    branches:
-      - main
-permissions:
-  contents: read
-  pull-requests: write
-env:
-  DOTNET_DOCS_HEAD: main
-  DOTNET_DOCS_BASE: live
+name: Build project and deploy to SmarterASP.NET
+on: [push]
+
 jobs:
-  default:
-    runs-on: ubuntu-latest
+  build_and_deploy:
+    name: Build package and deploy to SmarterASP.NET
+    runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v2
-      - run: |
-          if [ "$(gh pr list --base $DOTNET_DOCS_BASE --head $DOTNET_DOCS_HEAD --json id --jq ". | length")" -ne "0" ]; then
-            echo "::notice title=Skipping Workflow::A pull request for branch \"$DOTNET_DOCS_HEAD\" into branch \"$DOTNET_DOCS_BASE\" already exists."
-          else
-            gh pr create --base $DOTNET_DOCS_BASE --head $DOTNET_DOCS_HEAD --title "Merge to Live" --body "[AUTOMATED]"
-          fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v1
+
+      - name: Deploy to SmarterASP.NET
+        uses: jahbenjah/SmarterASP.NET-web-deploy@1.0.0
+        with:
+          website-name: ${{ secrets.WEBSITE_NAME }}
+          server-computer-name: ${{ secrets.SERVER_COMPUTER_NAME }}
+          server-username: ${{ secrets.SERVER_USERNAME }}
+          server-password: ${{ secrets.SERVER_PASSWORD }}
+          source-path: '\build\'
+          target-path: '/my-sub-directory/'
