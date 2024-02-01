@@ -15,5 +15,5 @@ jobs:
           server-computer-name: ${{ secrets.SERVER_COMPUTER_NAME }}
           server-username: ${{ secrets.SERVER_USERNAME }}
           server-password: ${{ secrets.SERVER_PASSWORD }}
-          source-path: '\build\'
+          source-path: 'aspnetcore/data/ef-rp/intro/samples/cu-completed-stages/part4/ContosoUniversity'
           target-path: '/site11/'
